@@ -4,6 +4,7 @@ import type { User } from "@supabase/supabase-js";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const getUser = useCallback(async () => {
     const { data, error } = await supabase.auth.getUser();
@@ -27,15 +28,19 @@ export function useAuth() {
   }, [getUser]);
 
   const signIn = async (email: string, password: string) => {
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    setLoading(false);
     if (error) throw error;
   };
 
   const signOut = async () => {
+    setLoading(true);
     const { error } = await supabase.auth.signOut();
+    setLoading(false);
     if (error) throw error;
   };
 
@@ -43,5 +48,6 @@ export function useAuth() {
     user,
     signIn,
     signOut,
+    loading,
   };
 }

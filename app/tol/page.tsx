@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useId, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,18 +15,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { errorMessage } from "@/lib/utils";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { redirect, RedirectType } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const TolPage = () => {
-  const { user, signIn } = useAuth();
+  const { signIn } = useAuth();
   const id = useId();
   const [attemptCount, setAttemptCount] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const router = useRouter();
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+
     if (!email || !password) {
       errorMessage(Error("Fill in email and password"));
       return;
@@ -37,7 +40,7 @@ const TolPage = () => {
       await signIn(email, password);
       setEmail("");
       setPassword("");
-      redirect("/registry", RedirectType.push);
+      router.push("/registry");
     } catch (error) {
       errorMessage(error);
     } finally {
@@ -45,16 +48,16 @@ const TolPage = () => {
       setLoading(false);
       if (attemptCount === 3) {
         errorMessage(Error("Too many attempts"));
-        redirect("/", RedirectType.replace);
+        router.replace("/");
       }
     }
   };
 
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
-  if (user) {
-    redirect("/registry", RedirectType.push);
-  }
+  useEffect(() => {
+    router.push("/registry");
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-screen bg-amber-50">
@@ -66,7 +69,7 @@ const TolPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSignIn}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
