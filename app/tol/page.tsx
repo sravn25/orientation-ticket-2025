@@ -18,7 +18,7 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const TolPage = () => {
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const id = useId();
   const [attemptCount, setAttemptCount] = useState(0);
   const [email, setEmail] = useState("");
@@ -40,7 +40,6 @@ const TolPage = () => {
       await signIn(email, password);
       setEmail("");
       setPassword("");
-      router.push("/registry");
     } catch (error) {
       errorMessage(error);
     } finally {
@@ -56,8 +55,8 @@ const TolPage = () => {
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
   useEffect(() => {
-    router.push("/registry");
-  }, []);
+    if (user) router.push("/registry");
+  }, [router, user]);
 
   return (
     <div className="flex justify-center items-center h-screen bg-amber-50">
