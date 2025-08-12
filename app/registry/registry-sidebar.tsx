@@ -14,13 +14,11 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  CalendarIcon,
   HomeIcon,
-  InboxIcon,
   LogOutIcon,
-  SearchIcon,
   SettingsIcon,
   TicketIcon,
+  UsersRoundIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -29,23 +27,13 @@ export function RegistrySidebar() {
   const menu = [
     {
       title: "Home",
-      url: "#",
+      url: "/",
       icon: HomeIcon,
     },
     {
-      title: "Inbox",
-      url: "#",
-      icon: InboxIcon,
-    },
-    {
-      title: "Calendar",
-      url: "#",
-      icon: CalendarIcon,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: SearchIcon,
+      title: "Registry",
+      url: "/registry",
+      icon: UsersRoundIcon,
     },
     {
       title: "Settings",
@@ -87,9 +75,11 @@ export function RegistrySidebar() {
             <SidebarMenuButton
               onClick={signOut}
               disabled={loading}
-              className="cursor-pointer"
+              className="cursor-pointer items-center justify-between"
             >
-              Sign out <u>{user?.email?.split("@")[0]}</u>
+              <span>
+                Sign out <u>{user?.email?.split("@")[0]}</u>
+              </span>
               <LogOutIcon />
             </SidebarMenuButton>
           </SidebarMenuItem>

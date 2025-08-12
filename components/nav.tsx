@@ -15,7 +15,10 @@ const Navbar = () => {
     return (
       <div className="h-16 px-4 bg-amber-50 flex items-center justify-between">
         <p>
-          Logged in as <u>{user?.email?.split("@")[0]}</u>
+          Logged in as{" "}
+          <a href="/registry" className="underline hover:text-amber-900">
+            {user?.email?.split("@")[0]}
+          </a>
         </p>
         <Button onClick={signOut} disabled={loading} className="cursor-pointer">
           Sign out
